@@ -62,5 +62,25 @@ describe Admin::CategoriesController do
 
     assert_raise(ActiveRecord::RecordNotFound) { Category.find(test_id) }
   end
-  
+  describe "test_create_category" do
+    
+    before(:each) do
+      get :new
+    end
+    
+    it 'should render template new' do
+      assert_template 'new'
+      assert_tag :tag => "table",
+        :attributes => { :id => "category_container" }
+    end
+    
+    it 'should have valid category' do
+      post :edit, :category => {:name => "Name1", :keywords =>"Keyword1", :permalink =>"permalink1", :description => "description1"}
+      assert_response :redirect, :action=>"index"
+      expect(assign(:category)).not_to_be_nil
+      expect(flash[:notice]).to_eq("Category was successfully saved.")
+    end
+  end
 end
+
+ 
